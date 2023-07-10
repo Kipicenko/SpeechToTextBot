@@ -1,5 +1,5 @@
 import {SlashCommandBuilder} from "discord.js";
-import {successEmbed} from "../../embeds.js"
+import {helpEmbed} from "../../embeds.js"
 
 export const helpCommandBuilder = {
     data: new SlashCommandBuilder()
@@ -28,8 +28,8 @@ export const helpCommandBuilder = {
 - \`visible-only-for-me\` - это настройка определяет, будет ли расшифровка голосового сообщения отображаться только для вас.
             `
         }
-        successEmbed.setTitle(localesTitle[interaction.locale] ?? 'Instruction')
-        successEmbed.setDescription(localesDescription[interaction.locale] ?? `
+        helpEmbed.setTitle(localesTitle[interaction.locale] ?? 'Instruction')
+        helpEmbed.setDescription(localesDescription[interaction.locale] ?? `
         To begin using the bot, you need to enable developer mode in Discord. This will allow you to copy message id. Follow these steps to enable developer mode:
 
 1. Go to **"User Settings"**.
@@ -42,6 +42,6 @@ Once you have enabled **"Developer Mode"**, you can now use the bot. Enter the c
 - \`visible-only-for-me\` - is a setting that determines whether the transcription of a voice message will be visible only to you.
         `)
         console.log(interaction.user.username, "using help")
-        interaction.reply({ ephemeral: true, embeds: [successEmbed] })
+        interaction.reply({ ephemeral: true, embeds: [helpEmbed] })
     }
 }
