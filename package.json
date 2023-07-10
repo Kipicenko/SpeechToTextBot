@@ -2,18 +2,18 @@
   "name": "speechtotextbot",
   "version": "1.0.0",
   "description": "SpeechToTextBot - this is a smart bot for Discord, capable of decrypting text from voice messages",
-  "main": "bot.js",
+  "main": "src/bot.js",
   "type": "module",
   "scripts": {
-    "start": "node bot.js",
-    "watch": "nodemon bot.js"
+    "start": "node src/bot.js",
+    "watch": "nodemon src/bot.js",
+    "deploy": "node src/deploy-commands.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@discordjs/core": "^0.6.0",
-    "@discordjs/voice": "^0.16.0",
     "discord.js": "^14.11.0"
   },
   "devDependencies": {
