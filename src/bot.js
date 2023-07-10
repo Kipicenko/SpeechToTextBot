@@ -16,6 +16,7 @@ export const client = new Client({
 client.commands = new Collection();
 client.cooldowns = new Collection();
 initializeCollectionsCommand(client)
+
 client.once(Events.ClientReady, c => {
     console.log(`Ready! Logged in as ${c.user.tag}`);
 });
@@ -35,6 +36,8 @@ client.on(Events.InteractionCreate, async interaction => {
         const locales = {
             ru: 'Команда работает только на серверах'
         }
+
+        console.log(interaction.user.username, locales.ru)
         failedEmbed.setDescription(locales[interaction.locale] ?? 'The command only works on servers')
         return interaction.reply({ ephemeral: true, embeds: [failedEmbed] });
     }
@@ -45,6 +48,7 @@ client.on(Events.InteractionCreate, async interaction => {
             ru: 'Нет доступа'
         }
 
+        console.log(interaction.user.username, locales.ru)
         failedEmbed.setDescription(locales[interaction.locale] ?? 'No access')
         return interaction.reply({ ephemeral: true, embeds: [failedEmbed] });
     }
@@ -56,6 +60,7 @@ client.on(Events.InteractionCreate, async interaction => {
             ru: `Тайм-аут команды - ${Math.round(checkTimeout / 1000)}s`
         }
 
+        console.log(interaction.user.username, locales.ru)
         failedEmbed.setDescription(locales[interaction.locale] ?? `Command timeout - ${Math.round(checkTimeout / 1000)}s`)
         return interaction.reply({ ephemeral: true, embeds: [failedEmbed] });
     }
@@ -69,6 +74,7 @@ client.on(Events.InteractionCreate, async interaction => {
             ru: 'При выполнении этой команды произошла ошибка!'
         }
 
+        console.log(interaction.user.username, locales.ru)
         failedEmbed.setDescription(locales[interaction.locale] ?? 'There was an error while executing this command!')
         if (interaction.replied || interaction.deferred) {
             interaction.followUp({ ephemeral: true, embeds: [failedEmbed] });

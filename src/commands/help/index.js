@@ -41,6 +41,7 @@ Once you have enabled **"Developer Mode"**, you can now use the bot. Enter the c
 - \`message-id\` - is the ID of a specific message.
 - \`visible-only-for-me\` - is a setting that determines whether the transcription of a voice message will be visible only to you.
         `)
+        console.log(interaction.user.username, "using help")
         interaction.reply({ ephemeral: true, embeds: [successEmbed] })
     }
 }

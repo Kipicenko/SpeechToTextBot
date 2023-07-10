@@ -53,6 +53,7 @@ export const speechToTextCommandBuilder = {
                        ru: "В голосовом сообщении отсутствует речь"
                    }
 
+                   console.log(interaction.user.username, result || locales.ru)
                    successEmbed.setDescription(result || (locales[interaction.locale] ?? "There is no speech in the voice message"))
                    interaction.reply({ ephemeral: isVisibleOnlyForMe, embeds: [successEmbed] })
                } catch (err) {
@@ -60,6 +61,7 @@ export const speechToTextCommandBuilder = {
                        ru: "Ошибка распознования"
                    }
 
+                   console.log(interaction.user.username, locales.ru)
                    failedEmbed.setDescription(locales[interaction.locale] ?? 'Recognition error')
                    interaction.reply({ephemeral: true, embeds: [failedEmbed] })
                }
@@ -69,6 +71,7 @@ export const speechToTextCommandBuilder = {
                     ru: 'Не является голосовым сообщением'
                 }
 
+                console.log(interaction.user.username, locales.ru)
                 failedEmbed.setDescription(locales[interaction.locale] ?? 'Is not a voice message')
                 interaction.reply({ephemeral: true, embeds: [failedEmbed] })
             }
@@ -79,6 +82,7 @@ export const speechToTextCommandBuilder = {
                 ru: 'Сообщение не найдено'
             }
 
+            console.log(interaction.user.username, locales.ru)
             failedEmbed.setDescription(locales[interaction.locale] ?? 'Message not found')
             interaction.reply({ ephemeral: true, embeds: [failedEmbed] });
         }
