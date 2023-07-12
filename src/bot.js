@@ -1,9 +1,10 @@
 import 'dotenv/config'
 import { Client, Events, GatewayIntentBits } from 'discord.js';
-import {commandsOnlyServer, initializeCollectionsCommand} from "./commands/index.js"
+import {privateCommands, initializeCollectionsCommand} from "./commands/index.js"
 import {accessServers} from "./accesses.js"
 import {failedEmbed} from "./embeds.js"
 import {commandsCollection} from "./collections.js";
+import {deploy} from "./deploy-commands.js";
 
 const client = new Client({
     intents: [
@@ -18,10 +19,15 @@ initializeCollectionsCommand()
 client.once(Events.ClientReady, c => {
     console.log(`Ready! Logged in as ${c.user.tag}`);
 });
+
 // client.on(Events.MessageCreate, (message) => {
 //     if (message.author.bot) return
 //     if (message.content[0] === '!') message.channel.send('Ready')
 // })
+
+client.on(Events.GuildCreate,async guild => {
+    await deploy(guild.id)
+})
 
 client.on(Events.InteractionCreate, async interaction => {
     const command = commandsCollection.get(interaction.commandName);
@@ -30,17 +36,7 @@ client.on(Events.InteractionCreate, async interaction => {
 
     if (!interaction.isChatInputCommand() && !interaction.isMessageContextMenuCommand()) return;
 
-    if (!interaction.guildId && commandsOnlyServer.includes(interaction.commandName)) {
-        const locales = {
-            ru: 'Команда работает только на серверах'
-        }
-
-        console.log(interaction.user.username, locales.ru)
-        failedEmbed.setDescription(locales[interaction.locale] ?? 'The command only works on servers')
-        return interaction.reply({ ephemeral: true, embeds: [failedEmbed] });
-    }
-
-    if (!accessServers.includes(interaction.guildId) && commandsOnlyServer.includes(interaction.commandName)) {
+    if (!accessServers.includes(interaction.guildId) && privateCommands.includes(interaction.commandName)) {
 
         const locales = {
             ru: 'Нет доступа'
@@ -63,9 +59,9 @@ client.on(Events.InteractionCreate, async interaction => {
         console.log(interaction.user.username, locales.ru)
         failedEmbed.setDescription(locales[interaction.locale] ?? 'There was an error while executing this command!')
         if (interaction.replied || interaction.deferred) {
-            interaction.followUp({ ephemeral: true, embeds: [failedEmbed] });
+            await interaction.followUp({ ephemeral: true, embeds: [failedEmbed] });
         } else {
-            interaction.reply({ ephemeral: true, embeds: [failedEmbed] });
+            await interaction.reply({ ephemeral: true, embeds: [failedEmbed] });
         }
     }
 });

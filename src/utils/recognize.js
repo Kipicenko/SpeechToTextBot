@@ -6,7 +6,7 @@ import prettyMs from 'pretty-ms';
 import {cooldownsCollection} from "../collections.js"
 
 
-export async function recognize({interaction, message, isVisibleOnlyForMe}) {
+export async function recognize({interaction, message}) {
     const url = isVoiceMessage(message)
 
     if (url) {
@@ -19,7 +19,7 @@ export async function recognize({interaction, message, isVisibleOnlyForMe}) {
                 }
 
                 console.log(interaction.user.username, locales.ru)
-                failedEmbed.setDescription(locales[interaction.locale] ?? `Command timeout - ${cooldown - Date.now()}`)
+                failedEmbed.setDescription(locales[interaction.locale] ?? `Command timeout - ${prettyMs(cooldown - Date.now())}`)
                 return interaction.reply({ ephemeral: true, embeds: [failedEmbed] });
             }
 
@@ -45,7 +45,7 @@ export async function recognize({interaction, message, isVisibleOnlyForMe}) {
             cooldownsCollection.set(`${interaction.commandName}_${interaction.user.id}`, Date.now() + 15000)
             setTimeout(() => cooldownsCollection.delete(`${interaction.commandName}_${interaction.user.id}`),15000)
 
-            interaction.reply({ ephemeral: isVisibleOnlyForMe, embeds: [successEmbed] })
+            await interaction.reply({ ephemeral: false, embeds: [successEmbed] })
         } catch (err) {
             const locales = {
                 ru: "Ошибка распознования"
@@ -53,7 +53,7 @@ export async function recognize({interaction, message, isVisibleOnlyForMe}) {
 
             console.log(interaction.user.username, locales.ru)
             failedEmbed.setDescription(locales[interaction.locale] ?? 'Recognition error')
-            interaction.reply({ephemeral: true, embeds: [failedEmbed] })
+            await interaction.reply({ephemeral: true, embeds: [failedEmbed] })
         }
     } else {
 
@@ -63,6 +63,6 @@ export async function recognize({interaction, message, isVisibleOnlyForMe}) {
 
         console.log(interaction.user.username, locales.ru)
         failedEmbed.setDescription(locales[interaction.locale] ?? 'Is not a voice message')
-        interaction.reply({ephemeral: true, embeds: [failedEmbed] })
+        await interaction.reply({ephemeral: true, embeds: [failedEmbed] })
     }
 }

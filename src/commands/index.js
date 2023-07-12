@@ -2,7 +2,7 @@ import {helpCommandBuilder} from "./slash-commands/help/index.js"
 import {speechToTextContextMenuCommandBuilder} from "./context-menu-commands/speech-to-text/index.js";
 import {commandsCollection} from "../collections.js"
 
-export const commandsOnlyServer = ['convert-to-text']
+export const privateCommands = ['convert-to-text']
 
 const commands = [
     speechToTextContextMenuCommandBuilder,

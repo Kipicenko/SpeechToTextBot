@@ -8,6 +8,6 @@ export const speechToTextContextMenuCommandBuilder = {
 
     async execute(interaction) {
         const message = interaction.targetMessage
-        await recognize({ interaction, message, isVisibleOnlyForMe: false })
+        await recognize({ interaction, message })
     }
 }

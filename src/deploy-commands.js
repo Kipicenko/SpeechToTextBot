@@ -3,12 +3,12 @@ import {REST, Routes} from "discord.js"
 import {getDeployCommands} from "./commands/index.js"
 
 const rest = new REST({ version: '10' }).setToken(process.env.BOT_TOKEN);
-async function deploy() {
+export async function deploy(guildId) {
     try {
         console.log(`Started refreshing application (/) commands.`);
 
         const data = await rest.put(
-            Routes.applicationCommands(process.env.CLIENT_ID),
+            Routes.applicationGuildCommands(process.env.CLIENT_ID, guildId),
             { body: getDeployCommands() },
         );
 
@@ -17,5 +17,3 @@ async function deploy() {
         console.error(error);
     }
 }
-
-deploy()

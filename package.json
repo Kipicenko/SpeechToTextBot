@@ -6,11 +6,10 @@
   "type": "module",
   "scripts": {
     "start": "node src/bot.js",
-    "watch": "nodemon src/bot.js",
-    "deploy": "node src/deploy-commands.js"
+    "watch": "nodemon src/bot.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Kipicenko",
   "license": "ISC",
   "dependencies": {
     "discord.js": "^14.11.0",
