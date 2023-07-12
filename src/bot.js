@@ -1,11 +1,11 @@
 import 'dotenv/config'
-import { Client, Events, Collection, GatewayIntentBits } from 'discord.js';
-import {initializeCollectionsCommand} from "./commands/index.js"
-import {isTimeoutPassed} from "./utils/is-timeout-passed.js"
+import { Client, Events, GatewayIntentBits } from 'discord.js';
+import {commandsOnlyServer, initializeCollectionsCommand} from "./commands/index.js"
 import {accessServers} from "./accesses.js"
 import {failedEmbed} from "./embeds.js"
+import {commandsCollection} from "./collections.js";
 
-export const client = new Client({
+const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMessages,
@@ -13,9 +13,7 @@ export const client = new Client({
     ]
 });
 
-client.commands = new Collection();
-client.cooldowns = new Collection();
-initializeCollectionsCommand(client)
+initializeCollectionsCommand()
 
 client.once(Events.ClientReady, c => {
     console.log(`Ready! Logged in as ${c.user.tag}`);
@@ -26,13 +24,13 @@ client.once(Events.ClientReady, c => {
 // })
 
 client.on(Events.InteractionCreate, async interaction => {
-    const command = client.commands.get(interaction.commandName);
+    const command = commandsCollection.get(interaction.commandName);
 
     if (!command) return;
 
-    if (!interaction.isChatInputCommand()) return;
+    if (!interaction.isChatInputCommand() && !interaction.isMessageContextMenuCommand()) return;
 
-    if (!interaction.guildId && interaction.commandName === "stt") {
+    if (!interaction.guildId && commandsOnlyServer.includes(interaction.commandName)) {
         const locales = {
             ru: 'Команда работает только на серверах'
         }
@@ -42,7 +40,7 @@ client.on(Events.InteractionCreate, async interaction => {
         return interaction.reply({ ephemeral: true, embeds: [failedEmbed] });
     }
 
-    if (!accessServers.includes(interaction.guildId) && interaction.commandName === "stt") {
+    if (!accessServers.includes(interaction.guildId) && commandsOnlyServer.includes(interaction.commandName)) {
 
         const locales = {
             ru: 'Нет доступа'
@@ -50,18 +48,6 @@ client.on(Events.InteractionCreate, async interaction => {
 
         console.log(interaction.user.username, locales.ru)
         failedEmbed.setDescription(locales[interaction.locale] ?? 'No access')
-        return interaction.reply({ ephemeral: true, embeds: [failedEmbed] });
-    }
-
-    const checkTimeout = isTimeoutPassed(client, interaction)
-    if (checkTimeout) {
-
-        const locales = {
-            ru: `Тайм-аут команды - ${Math.round(checkTimeout / 1000)}s`
-        }
-
-        console.log(interaction.user.username, locales.ru)
-        failedEmbed.setDescription(locales[interaction.locale] ?? `Command timeout - ${Math.round(checkTimeout / 1000)}s`)
         return interaction.reply({ ephemeral: true, embeds: [failedEmbed] });
     }
 

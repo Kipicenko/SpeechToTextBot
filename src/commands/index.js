@@ -1,14 +1,17 @@
-import {speechToTextCommandBuilder} from "./speech-to-text/index.js"
-import {helpCommandBuilder} from "./help/index.js"
+import {helpCommandBuilder} from "./slash-commands/help/index.js"
+import {speechToTextContextMenuCommandBuilder} from "./context-menu-commands/speech-to-text/index.js";
+import {commandsCollection} from "../collections.js"
+
+export const commandsOnlyServer = ['convert-to-text']
 
 const commands = [
-    speechToTextCommandBuilder,
+    speechToTextContextMenuCommandBuilder,
     helpCommandBuilder
 ]
 
-export function initializeCollectionsCommand(client) {
+export function initializeCollectionsCommand() {
     commands.forEach(command => {
-        client.commands.set(command.data.name, command)
+        commandsCollection.set(command.data.name, command)
     })
 }
 
