@@ -11,7 +11,7 @@ export async function recognize({interaction, message, isVisibleOnlyForMe}) {
 
     if (url) {
         try {
-            const cooldown = cooldownsCollection.get(`${interaction.commandName}_${interaction.user.id}`) || 0
+            const cooldown = cooldownsCollection.get(`speechToText_${interaction.user.id}`) || 0
 
             if (Date.now() - cooldown < 0) {
                 const locales = {
@@ -42,8 +42,8 @@ export async function recognize({interaction, message, isVisibleOnlyForMe}) {
             console.log(interaction.user.username, result || locales.ru)
             successEmbed.setDescription(result || (locales[interaction.locale] ?? "There is no speech in the voice message"))
 
-            cooldownsCollection.set(`${interaction.commandName}_${interaction.user.id}`, Date.now() + 15000)
-            setTimeout(() => cooldownsCollection.delete(`${interaction.commandName}_${interaction.user.id}`),15000)
+            cooldownsCollection.set(`speechToText_${interaction.user.id}`, Date.now() + 15000)
+            setTimeout(() => cooldownsCollection.delete(`speechToText_${interaction.user.id}`),15000)
 
             await interaction.reply({ ephemeral: isVisibleOnlyForMe, embeds: [successEmbed] })
         } catch (err) {
