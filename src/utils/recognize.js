@@ -6,7 +6,7 @@ import prettyMs from 'pretty-ms';
 import {cooldownsCollection} from "../collections.js"
 
 
-export async function recognize({interaction, message}) {
+export async function recognize({interaction, message, isVisibleOnlyForMe}) {
     const url = isVoiceMessage(message)
 
     if (url) {
@@ -45,7 +45,7 @@ export async function recognize({interaction, message}) {
             cooldownsCollection.set(`${interaction.commandName}_${interaction.user.id}`, Date.now() + 15000)
             setTimeout(() => cooldownsCollection.delete(`${interaction.commandName}_${interaction.user.id}`),15000)
 
-            await interaction.reply({ ephemeral: false, embeds: [successEmbed] })
+            await interaction.reply({ ephemeral: isVisibleOnlyForMe, embeds: [successEmbed] })
         } catch (err) {
             const locales = {
                 ru: "Ошибка распознования"
