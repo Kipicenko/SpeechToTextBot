@@ -1,5 +1,4 @@
 import 'dotenv/config'
-import {getBuffer} from "./get-buffer.js";
 import {failedEmbed, successEmbed} from "../embeds.js";
 import {isVoiceMessage} from "./is-voice-message.js";
 import prettyMs from 'pretty-ms';
@@ -24,14 +23,14 @@ export async function recognize({interaction, message, isVisibleOnlyForMe}) {
             }
 
             const stream = await fetch(url)
-            const buffer = await getBuffer(stream)
+            const arrayBuffer = await stream.arrayBuffer()
 
             const data = await fetch('https://stt.api.cloud.yandex.net/speech/v1/stt:recognize', {
                 method: 'POST',
                 headers: {
                     'Authorization': 'Api-Key ' + process.env.YA_API_KEY
                 },
-                body: buffer
+                body: arrayBuffer
             })
             const {result} = await data.json();
 
