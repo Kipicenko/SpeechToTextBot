@@ -46,7 +46,8 @@ export async function recognize({interaction, message, isVisibleOnlyForMe}) {
             setTimeout(() => cooldownsCollection.delete(`speechToText_${interaction.user.id}`),15000)
 
             await interaction.reply({ ephemeral: isVisibleOnlyForMe, embeds: [successEmbed] })
-        } catch (err) {
+        } catch (error) {
+            console.log(error)
             const locales = {
                 ru: "Ошибка распознования"
             }
