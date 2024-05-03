@@ -1,0 +1,9 @@
+.git/
+.idea/
+.vscode/
+.yarn/
+.yarnrc.yml
+.env.example
+.gitignore
+Dockerfile
+.dockerignore

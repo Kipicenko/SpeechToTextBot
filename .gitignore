@@ -1,7 +1,16 @@
-.idea
-node_modules
-.env
+node_modules/
+.idea/
+.vscode/
+.yarn/
 
+# dotenv environment variable files
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+
+# Logs
 logs
 *.log
 npm-debug.log*
@@ -9,3 +18,5 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 .pnpm-debug.log*
+
+.DS_Store
