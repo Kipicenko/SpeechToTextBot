@@ -1,4 +1,3 @@
-import 'dotenv/config'
 import {failedEmbed, successEmbed} from "../embeds.js";
 import {isVoiceMessage} from "./is-voice-message.js";
 import prettyMs from 'pretty-ms';
@@ -25,21 +24,26 @@ export async function recognize({interaction, message, isVisibleOnlyForMe}) {
             const stream = await fetch(url)
             const arrayBuffer = await stream.arrayBuffer()
 
-            const data = await fetch('https://stt.api.cloud.yandex.net/speech/v1/stt:recognize', {
+            const response = await fetch('https://stt.api.cloud.yandex.net/speech/v1/stt:recognize', {
                 method: 'POST',
                 headers: {
                     'Authorization': 'Api-Key ' + process.env.YA_API_KEY
                 },
                 body: arrayBuffer
             })
-            const {result} = await data.json();
+
+            if (!response.ok) {
+                throw new Error(`HTTP error, status = ${response.status}`);
+            }
+
+            const data = await response.json();
 
             const locales = {
                 ru: "В голосовом сообщении отсутствует речь"
             }
 
-            console.log(interaction.user.username, result || locales.ru)
-            successEmbed.setDescription(result || (locales[interaction.locale] ?? "There is no speech in the voice message"))
+            console.log(interaction.user.username, data.result || locales.ru)
+            successEmbed.setDescription(data.result || (locales[interaction.locale] ?? "There is no speech in the voice message"))
 
             cooldownsCollection.set(`speechToText_${interaction.user.id}`, Date.now() + 15000)
             setTimeout(() => cooldownsCollection.delete(`speechToText_${interaction.user.id}`),15000)
@@ -48,7 +52,7 @@ export async function recognize({interaction, message, isVisibleOnlyForMe}) {
         } catch (error) {
             console.log(error)
             const locales = {
-                ru: "Ошибка распознования"
+                ru: "Ошибка распознавания"
             }
 
             console.log(interaction.user.username, locales.ru)

@@ -4,9 +4,9 @@ WORKDIR /app
 
 EXPOSE 80
 
-COPY package.json yarn.lock ./
+COPY package.json yarn.lock .yarnrc.yml ./
 
-RUN yarn install
+RUN corepack enable && yarn install
 
 COPY . .
 

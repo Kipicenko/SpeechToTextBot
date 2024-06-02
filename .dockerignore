@@ -2,8 +2,11 @@
 .idea/
 .vscode/
 .yarn/
-.yarnrc.yml
+node_modules/
+.pnp.*
 .env.example
+.env
 .gitignore
 Dockerfile
 .dockerignore
+README.md
